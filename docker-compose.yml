@@ -1,0 +1,36 @@
+version: "3.8"
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: courses_api
+      MYSQL_USER: user
+      MYSQL_PASSWORD: RAY123sam
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - course-net
+
+  course-api:
+    build:
+      context: ./courses-api
+    container_name: course-api
+    depends_on:
+      - mysql-db
+    ports:
+      - "8080:8080"
+    networks:
+      - course-net
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+volumes:
+  mysql-data:
+
+networks:
+  course-net:
